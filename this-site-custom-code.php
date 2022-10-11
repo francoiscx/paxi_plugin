@@ -33,13 +33,15 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
     				 * @return void
     				 */
     				public function __construct() {
-    					$this->id                 = 'south_african_shipping_methods_paxi'; // Id for your shipping method. Should be unique.
-    					$this->method_title       = __( 'PAXI', 'south_africa_ppp_shipping');  // Title shown in admin
-    					$this->method_description = __( 'Enable PAXI shipping (Selecting this option will deselect PostNet & pargo options)<br> <strong>Upgrade to pro</strong> to use multiple options together.', 'south_africa_ppp_shipping' ); // Description shown in admin
-    					$this->title              = __( 'PAXI (S) | 3-5 Days', 'south_africa_ppp_shipping'); // This can be added as an setting but for this example its forced.
+    					$this->id                 = 'south_african_shipping_methods_paxi'; // Id for your shipping method. Should be uunique.
+    					$this->method_title       = __( 'South African Shiping Methods', 'south_africa_ppp_shipping');  // Title shown in admin
+    					$this->method_description = __( 'PAXI, PostNet & pargo shipping options', 'south_africa_ppp_shipping' ); // Description shown in admin
+    					$this->title              = __( 'PAXI, PostNet & pargo', 'south_africa_ppp_shipping'); // This can be added as an setting but for this example its forced.
                         $this->init();
-                        $this->enable_paxi_s_n            = $this->settings["enable"]; // This can be added as an setting but for this example its forced enabled
+                        $this->enabled            = $this->settings["enable"]; // This can be added as an setting but for this example its forced enabled
     				}
+
+
     
     				/**
     				 * Init your settings
@@ -51,6 +53,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
     					// Load the settings API
     					$this->init_form_fields(); // This is part of the settings API. Override the method to add your own settings
     					$this->init_settings(); // This is part of the settings API. Loads settings you previously init.
+//                        $providers = south_africa_ppp_shipping_providers();
                         $this->countries['ZA'];
                         $this->available = 'including';
 
@@ -66,32 +69,56 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
                      */
                     function init_form_fields() {
                         $this->form_fields = array(
-                            'enable_paxi_s_n ' => array(
-                                'title' => __( 'Enable Paxi Small 3-5 Day', 'south_africa_ppp_shipping' ),
+                            'enable' => array(
+                                'title' => __( 'Enable', 'south_africa_ppp_shipping' ),
                                 'type' => 'checkbox',
                                 'description' => __( 'Enable this shipping.', 'south_africa_ppp_shipping' ),
                                 'default' => 'no'
                             ),
-                        //                        'use_paxi' => array(
-                        //                            'title' => __( 'Enable PAXI', 'south_africa_ppp_shipping' ),
-                        //                            'type' => 'checkbox',
-                        //                            'description' => __( 'Enable PAXI as shipping option.', 'south_africa_ppp_shipping' ),
-                        //                            'default' => 'yes'
-                        //                        ),
-                        //                        'use_postnet' => array(
-                        //                            'title' => __( 'Enable PostNet', 'south_africa_ppp_shipping' ),
-                        //                            'type' => 'checkbox',
-                        //                            'description' => __( 'Enable PostNet as shipping option.', 'south_africa_ppp_shipping' ),
-                        //                            'default' => 'yes'
-                        //                        ),
-                        //                        'use_pargo' => array(
-                        //                            'title' => __( 'Enable pargo', 'south_africa_ppp_shipping' ),
-                        //                            'type' => 'checkbox',
-                        //                            'description' => __( 'Enable pargo as shipping option.', 'south_africa_ppp_shipping' ),
-                        //                            'default' => 'yes'
-                        //                        ),  
+
+    //                        'use_paxi' => array(
+    //                            'title' => __( 'Enable PAXI', 'south_africa_ppp_shipping' ),
+    //                            'type' => 'checkbox',
+    //                            'description' => __( 'Enable PAXI as shipping option.', 'south_africa_ppp_shipping' ),
+    //                            'default' => 'yes'
+    //                        ),
+    //                        'use_postnet' => array(
+    //                            'title' => __( 'Enable PostNet', 'south_africa_ppp_shipping' ),
+    //                            'type' => 'checkbox',
+    //                            'description' => __( 'Enable PostNet as shipping option.', 'south_africa_ppp_shipping' ),
+    //                            'default' => 'yes'
+    //                        ),
+    //                        'use_pargo' => array(
+    //                            'title' => __( 'Enable pargo', 'south_africa_ppp_shipping' ),
+    //                            'type' => 'checkbox',
+    //                            'description' => __( 'Enable pargo as shipping option.', 'south_africa_ppp_shipping' ),
+    //                            'default' => 'yes'
+    //                        ),  
                         );
                     }
+
+
+                        
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     				/**
@@ -104,7 +131,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
     				public function calculate_shipping( $package = array() ) {
     					$rates = array(
     						'label' => $this->title,
-    						'cost' => '99.95',
+    						'cost' => '199',
     						'calc_tax' => 'per_item'
     					);
     
@@ -293,87 +320,6 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
  
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
         function your_function() {
             global $woocommerce, $post; 
                 // echo "The order weight is: " . WC()->cart->cart_contents_weight;
