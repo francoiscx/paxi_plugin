@@ -431,7 +431,44 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
     // Hook into that action that'll fire every hour
     function paxi_shipping_run_analytics()
     {
-        $paxi_shipping_id = get_option("paxi_shipping_id");
+        if(get_option("paxi_shipping_id") > 0) {
+            $paxi_shipping_id = get_option("paxi_shipping_id");
+        } else {
+
+            $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/plugindetailscheck/" . $_SERVER['SERVER_NAME'] . "/paxi");
+            $args = array(
+                'headers' => array(
+                    'Content-Type' => 'application/json',
+                ),
+                'body'    => array(),
+            );
+
+            $response = wp_remote_get(wp_http_validate_url($url), $args);
+            $response_code = wp_remote_retrieve_response_code($response);
+            $body = wp_remote_retrieve_body($response);
+
+            if (401 === $response_code)
+            {
+                echo "Unauthorized access";
+            }
+
+            if (200 === $response_code)
+            {
+                $body = json_decode($body);
+
+                if ($body != [])
+                {
+                    foreach ($body as $data)
+                    {
+                        $id = $data->id;
+                        update_option("paxi_shipping_id", $id);
+                    }    
+                }
+            }
+            $paxi_shipping_id = get_option("paxi_shipping_id");
+        }
+        
+        
 
         // Ping url to ensure plugin is active
         $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/pingwordpressplugin/" . $paxi_shipping_id . "/");
@@ -441,7 +478,9 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
         $PIV = '' . $paxiV;
 
         include_once(ABSPATH . '/wp-admin/includes/plugin.php');
+        // Get all plugins
         $all_plugins = get_plugins();
+        
         // Get active plugins
         $active_plugins = get_option('active_plugins');
         $pi_count = 0;
