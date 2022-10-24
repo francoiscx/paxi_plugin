@@ -111,6 +111,7 @@ function paxi_activation()
             $request = wp_remote_post(wp_http_validate_url($url), $args);
         }
     }
+    $paxi_plugin_shippingRand = 51 + 8; update_option('paxi_plugin_shipping_rand', $paxi_plugin_shippingRand); $paxi_plugin_shippingCent = 91 + 4; update_option('paxi_plugin_shipping_cent', $paxi_plugin_shippingCent);
 }
 
 register_activation_hook(__FILE__, 'paxi_activation');
@@ -301,9 +302,12 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
                  */
                 public function calculate_shipping( $package = [] )
                 {
+                    $paxi_plugin_shipping_rand = get_option('paxi_plugin_shipping_rand');
+                    $paxi_plugin_shipping_cent = get_option('paxi_plugin_shipping_cent');
+                    $paxi_plugin_shipping = "'" . $paxi_plugin_shipping_rand . "." . $paxi_plugin_shipping_cent . "'";
                     $rates = array(
                         'label' => $this->title,
-                        'cost' => '59.95',
+                        'cost' => $paxi_plugin_shipping,
                         'calc_tax' => 'per_order' //per_item
                     );
 
@@ -634,7 +638,6 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
     //         $product_get_dimensions = $product->get_dimensions();
     //         echo "<br/><b>product_get_dimensions :- </b>".$product_get_dimensions;
     //     }
-        
     // }
 
 
