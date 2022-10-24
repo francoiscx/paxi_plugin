@@ -40,7 +40,7 @@ Now type "PAXI" into the search bar and wait for the plugins to filter. Now clic
 
 Install From Website
 The link on our website will take you to our official Plugin Page on WordPress.
-Alternatively, you can go straight there by visiting: https://wordpress.org/plugins/paxi-plugin/
+Alternatively, you can go straight there by visiting: https://wordpress.org/plugins/paxi-shipping/
 
 Click on the download button to download the latest official zipped file of our plugin. Now log in to the admin panel of your WordPress website, click on "plugins", then again at the top left on "Add New". Thereafter click on "Upload Plugin" and select or drag and drop the file you just downloaded.
 After installation, activate the plugin. Thereafter you are good to go, and PAXI will be displayed as a shipping option on checkout.

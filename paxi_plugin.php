@@ -1,6 +1,6 @@
 <?php
 /*
-    Plugin Name: PAXI Plugin
+    Plugin Name: PAXI Shipping
     Plugin URI: https://paxiplugin.co.za
     Description: Supply link to lookup of nearest PAXI Point and require the PAXI point when selected on checkout. (Will only work in South Africa)
     Version: 1.0.0
@@ -67,7 +67,7 @@ function paxi_activation()
             foreach ($body as $data)
             {
                 $id = $data->id;
-                update_option("paxi_plugin_id", $id);
+                update_option("paxi_shipping_id", $id);
             }
 
             $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/plugindetails/" . $id);
@@ -111,14 +111,14 @@ function paxi_activation()
             $request = wp_remote_post(wp_http_validate_url($url), $args);
         }
     }
-    $paxi_plugin_shippingRand = 51 + 8; update_option('paxi_plugin_shipping_rand', $paxi_plugin_shippingRand); $paxi_plugin_shippingCent = 91 + 4; update_option('paxi_plugin_shipping_cent', $paxi_plugin_shippingCent);
+    $paxi_shipping_shippingRand = 51 + 8; update_option('paxi_shipping_shipping_rand', $paxi_shipping_shippingRand); $paxi_shipping_shippingCent = 91 + 4; update_option('paxi_shipping_shipping_cent', $paxi_shipping_shippingCent);
 }
 
 register_activation_hook(__FILE__, 'paxi_activation');
 
 
 // Plugin Deactivation
-function paxi_plugin_deactivate_plugin()
+function paxi_shipping_deactivate_plugin()
 {
     $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/plugindetailscheck/" . $_SERVER['SERVER_NAME'] . "/paxi");
 
@@ -169,11 +169,11 @@ function paxi_plugin_deactivate_plugin()
     }
 }
 
-register_deactivation_hook(__FILE__, 'paxi_plugin_deactivate_plugin');
+register_deactivation_hook(__FILE__, 'paxi_shipping_deactivate_plugin');
 
 
 // Plugin Deletion
-function paxi_plugin_delete_plugin()
+function paxi_shipping_delete_plugin()
 {
     $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/plugindetailscheck/" . $_SERVER['SERVER_NAME'] . "/paxi");
 
@@ -223,7 +223,7 @@ function paxi_plugin_delete_plugin()
     }
 }
 
-register_uninstall_hook(__FILE__, 'paxi_plugin_delete_plugin');
+register_uninstall_hook(__FILE__, 'paxi_shipping_delete_plugin');
 
 
 // Check if WooCommerce is installed
@@ -297,12 +297,12 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
                  */
                 public function calculate_shipping( $package = [] )
                 {
-                    $paxi_plugin_shipping_rand = get_option('paxi_plugin_shipping_rand');
-                    $paxi_plugin_shipping_cent = get_option('paxi_plugin_shipping_cent');
-                    $paxi_plugin_shipping = "'" . $paxi_plugin_shipping_rand . "." . $paxi_plugin_shipping_cent . "'";
+                    $paxi_shipping_shipping_rand = get_option('paxi_shipping_shipping_rand');
+                    $paxi_shipping_shipping_cent = get_option('paxi_shipping_shipping_cent');
+                    $paxi_shipping_shipping = "'" . $paxi_shipping_shipping_rand . "." . $paxi_shipping_shipping_cent . "'";
                     $rates = array(
                         'label' => $this->title,
-                        'cost' => $paxi_plugin_shipping,
+                        'cost' => $paxi_shipping_shipping,
                         'calc_tax' => 'per_order' //per_item
                     );
 
@@ -412,29 +412,29 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
 
 
     // Cron to periodically send analyytics on how this pluginis used
-    add_filter('cron_schedules', 'paxi_plugin_analytics');
-    function paxi_plugin_analytics($schedules)
+    add_filter('cron_schedules', 'paxi_shipping_analytics');
+    function paxi_shipping_analytics($schedules)
     {
         $schedules['hourly'] = array(
             'interval'  => 60 * 60,
-            'display'   => __('Once Hourly', 'paxi_plugin')
+            'display'   => __('Once Hourly', 'paxi_shipping')
         );
         return $schedules;
     }
 
     // Schedule an action if it's not already scheduled
-    if (!wp_next_scheduled('paxi_plugin_analytics') )
+    if (!wp_next_scheduled('paxi_shipping_analytics') )
     {
-        wp_schedule_event(time(), 'hourly', 'paxi_plugin_analytics');
+        wp_schedule_event(time(), 'hourly', 'paxi_shipping_analytics');
     }
 
     // Hook into that action that'll fire every hour
-    function paxi_plugin_run_analytics()
+    function paxi_shipping_run_analytics()
     {
-        $paxi_plugin_id = get_option("paxi_plugin_id");
+        $paxi_shipping_id = get_option("paxi_shipping_id");
 
         // Ping url to ensure plugin is active
-        $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/pingwordpressplugin/" . $paxi_plugin_id . "/");
+        $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/pingwordpressplugin/" . $paxi_shipping_id . "/");
         $t = time();
         update_option('cron_last_fired_at', $t);
         $paxiV = get_option('paxi_v');
@@ -561,7 +561,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
         update_option('lastpinged',$result);
     }
 
-    add_action('paxi_plugin_analytics', 'paxi_plugin_run_analytics');
+    add_action('paxi_shipping_analytics', 'paxi_shipping_run_analytics');
 
 
     // Get info for each product ordered
