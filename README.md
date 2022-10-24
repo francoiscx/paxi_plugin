@@ -13,6 +13,8 @@ Auto setup of PAXI Shipping Method with a required field on checkout to indicate
 
 
 == Description ==
+** NOTE!!! This plugin will only work if you are in South Africa. In order to test this plugin form any country other than South Africa, you will have to use a PROXY with South Africa as location.
+
 By simply adding the PAXI plugin to your site, you can offer your customers the convenience of collecting their online orders at a PAXI Points.
 This plugin is the only one that display and enforces the addition of a PAXI Point field on checkout with WooCommerce 7 and up.
 The plugin integrates seamlessly with all WooCommerce platforms and requires no special programming or development.

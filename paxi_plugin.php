@@ -2,7 +2,7 @@
 /*
     Plugin Name: PAXI Plugin
     Plugin URI: https://paxiplugin.co.za
-    Description: Supply link to lookup of nearest PAXI Point and require the PAXI point when selected on checkout.
+    Description: Supply link to lookup of nearest PAXI Point and require the PAXI point when selected on checkout. (Will only work in South Africa)
     Version: 1.0.0
     Author: Web-X | For Everything Web | South Africa
     Author URI: https://web-x.co.za/
@@ -225,6 +225,7 @@ function paxi_plugin_delete_plugin()
 
 register_uninstall_hook(__FILE__, 'paxi_plugin_delete_plugin');
 
+
 // Check if WooCommerce is installed
 if ( in_array( 'woocommerce/woocommerce.php',
 apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
@@ -284,12 +285,6 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
                             'description' => __( 'Activate PAXI.', 'paxi_shipping' ),
                             'default' => 'yes'
                         ), 
-                        // 'checkout_weight' => array(
-                        //     'title' => __( 'Show Weight on Checkout', 'paxi_shipping' ),
-                        //     'type' => 'checkbox',
-                        //     'description' => __( 'Checkout Weight', 'paxi_shipping' ),
-                        //     'default' => 'no'
-                        // ), 
                     );
                 }
 
@@ -404,18 +399,6 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
     add_action( 'woocommerce_checkout_update_order_meta', 'paxi_shipping_method_checkout_field_update_order_meta' );
 
   
-    // function paxi_shipping_method_billing_another_group($checkout_fields)
-    // {
-    //     if(isset ( $_POST['paxi_shipping_method_location'] ) )
-    //     {
-    //         $checkout_fields['order']['billing_paxi_shipping_method_location'] = $_POST['paxi_shipping_method_location'];
-    //         return $checkout_fields;
-    //     }
-    // }
-
-    // add_filter('woocommerce_checkout_fields', 'paxi_shipping_method_billing_another_group');
-
-
     /* Display field value on the order in the backend edit page on order form */
     function paxi_shipping_method_custom_checkout_field_display_admin_order_meta($order)
     {
@@ -581,66 +564,6 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
     add_action('paxi_plugin_analytics', 'paxi_plugin_run_analytics');
 
 
-    // // Display the cart item weight in cart and checkout pages
-    // add_filter( 'woocommerce_get_item_data', 'display_custom_item_data', 10, 2 );
-    // function display_custom_item_data( $cart_item_data, $cart_item )
-    // {
-    //     if(get_option('checkout_weight') !== null )
-    //     {
-    //         if ( $cart_item['data']->get_weight() > 0 )
-    //         {
-    //             $cart_item_data[] = array(
-    //                 'name' => __( 'Weight subtotal', 'woocommerce' ),
-    //                 'value' =>  ( $cart_item['quantity'] * $cart_item['data']->get_weight() )  . ' ' . get_option('woocommerce_weight_unit')
-
-    //             );
-    //         }
-    //         return $cart_item_data;
-    //     }
-    //     echo get_option('checkout_weight');
-    // }
-
-
-    // // Save and Display the order item weight (everywhere)
-    // add_action( 'woocommerce_checkout_create_order_line_item', 'display_order_item_data', 20, 4 );
-    // function display_order_item_data( $item, $cart_item_key, $values, $order ) 
-    // {
-    //     if(get_option('checkout_weight') !== null )
-    //     {
-    //         if ( $values['data']->get_weight() > 0 )
-    //         {
-    //             $item->update_meta_data( __( 'Weight subtotal', 'woocommerce' ),( $values['quantity'] * $values['data']->get_weight() )  . ' ' . get_option('woocommerce_weight_unit') );
-    //         }
-    //     }
-    // }
-
-
-    // add_filter('woocommerce_get_item_data', 'my_custom_dimensions', 10, 2);
-
-    // function my_custom_dimensions( $dim_string, $dimensions ) 
-    // {
-    //     if(isset($cart_item['data']))
-    //     {
-    //         $product = $cart_item['data'];    
-
-    //         $product_get_weight = $product->get_weight();
-    //         echo "<br/><b>product_get_weight :- </b>".$product_get_weight;
-
-    //         $product_get_length = $product->get_length();
-    //         echo "<br/><b>product_get_length :- </b>".$product_get_length;
-
-    //         $product_get_width = $product->get_width();
-    //         echo "<br/><b>product_get_width :- </b>".$product_get_width;
-
-    //         $product_get_height = $product->get_height();
-    //         echo "<br/><b>product_get_height :- </b>".$product_get_height;
-
-    //         $product_get_dimensions = $product->get_dimensions();
-    //         echo "<br/><b>product_get_dimensions :- </b>".$product_get_dimensions;
-    //     }
-    // }
-
-
     // Get info for each product ordered
     add_action('woocommerce_checkout_order_processed', 'get_product_info', 10, 1);
     function get_product_info( $order_id ) 
@@ -675,6 +598,5 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
         // Ouptput some data
         $lastorder = '<p>Order ID: '. $order_id . ' — Order Status: ' . $order->get_status() . ' — Order is paid: ' . $paid . ', at: ' . time() . '</p>';
         update_option('last_order', $lastorder);
-
     }
 }
