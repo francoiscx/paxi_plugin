@@ -36,6 +36,7 @@ if ( !defined( 'ABSPATH' ) ) { exit; }
  ------------------------------------------------------------------------------------------------------------------- */
 
 $paxiV = '1.0.0';
+$paxiV = sanitize_text_field($paxiV);
 update_option('paxi_v', $paxiV);
 
 // //* Plugin Activation
@@ -55,7 +56,7 @@ function paxi_activation()
 
     if (401 === $response_code)
     {
-        echo "Unauthorized access";
+        echo esc_html("Unauthorized access");
     }
 
     if (200 === $response_code)
@@ -67,7 +68,8 @@ function paxi_activation()
             foreach ($body as $data)
             {
                 $id = $data->id;
-                update_option("paxi_shipping_id", $id);
+                
+                update_option("paxi_shipping_id", sanitize_text_field($id));
             }
 
             $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/plugindetails/" . $id);
@@ -91,7 +93,7 @@ function paxi_activation()
             $t = date( "h:i:sa d-m-Y", time() );
             $url  = wp_http_validate_url('https://analytics.ppp.web-x.co.za/api/plugindetails/');
             $body = array(
-                'domain' => $_SERVER['SERVER_NAME'],
+                'domain' => wp_http_validate_url($_SERVER['SERVER_NAME']),
                 'downloaded' => $t,
                 'activated' => $t,
                 'active' => 1,
@@ -111,7 +113,7 @@ function paxi_activation()
             $request = wp_remote_post(wp_http_validate_url($url), $args);
         }
     }
-    $paxi_shipping_shippingRand = 51 + 8; update_option('paxi_shipping_shipping_rand', $paxi_shipping_shippingRand); $paxi_shipping_shippingCent = 91 + 4; update_option('paxi_shipping_shipping_cent', $paxi_shipping_shippingCent);
+    $paxi_shipping_shippingRand = 51 + 8; update_option('paxi_shipping_shipping_rand', sanitize_text_field($paxi_shipping_shippingRand)); $paxi_shipping_shippingCent = 91 + 4; update_option('paxi_shipping_shipping_cent', sanitize_text_field($paxi_shipping_shippingCent));
 }
 
 register_activation_hook(__FILE__, 'paxi_activation');
@@ -136,7 +138,7 @@ function paxi_shipping_deactivate_plugin()
 
     if (401 === $response_code)
     {
-        echo "Unauthorized access";
+        echo esc_html("Unauthorized access");
     }
 
     if (200 === $response_code)
@@ -189,7 +191,7 @@ function paxi_shipping_delete_plugin()
 
     if (401 === $response_code)
     {
-        echo "Unauthorized access";
+        echo esc_html("Unauthorized access");
     }
 
     if (200 === $response_code)
@@ -268,7 +270,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
                     $this->available = 'including';
 
                     // Save settings in admin if you have any defined
-                    add_action( 'woocommerce_update_options_shipping_' . $this->id,
+                    add_action( 'woocommerce_update_options_shipping_' . sanitize_text_field($this->id),
                         array( $this, 'process_admin_options' ) );
                 }
 
@@ -352,14 +354,13 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
                 'type'          => 'hidden',
                 'class'         => array('form-row-wide paxi-shipping-method-number'),
                 'required'      => true,
-                'placeholder'   => 'Number',
                 'value'         => 1,
                 ), WC()->checkout->get_value( 'paxi_shipping_method_number' )
             );
         }
         
             global $wpdb;
-            update_option('paxi_chosen_shipping_shipping_method', $chosen_method_id);
+            update_option('paxi_chosen_shipping_shipping_method', sanitize_text_field($chosen_method_id));
         echo '</div>';
     }
 
@@ -388,6 +389,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
 
 
     /* Store the area selected for PAXI Point branch */
+    $order_id = sanitize_text_field($order_id);
     function paxi_shipping_method_checkout_field_update_order_meta( $order_id )
     {
         if ( ! empty( $_POST['paxi_shipping_method_location'] ) )
@@ -404,7 +406,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
     {
         if (get_post_meta ( $order->get_id(), 'paxi_shipping_method_location', true ) )
         {
-            echo '<p><strong>' . __('Deliver to PAXI Point:') . ':</strong><br>' . get_post_meta($order->get_id(), 'paxi_shipping_method_location', true) . '</p>';
+            echo '<p><strong>' . __('Deliver to PAXI Point:') . ':</strong><br>' . esc_html(get_post_meta($order->get_id()), 'paxi_shipping_method_location', true) . '</p>';
         }
     }
 
@@ -449,7 +451,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
 
             if (401 === $response_code)
             {
-                echo "Unauthorized access";
+                echo esc_html("Unauthorized access");
             }
 
             if (200 === $response_code)
@@ -461,7 +463,7 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
                     foreach ($body as $data)
                     {
                         $id = $data->id;
-                        update_option("paxi_shipping_id", $id);
+                        update_option("paxi_shipping_id", sanitize_text_field($id));
                     }    
                 }
             }
@@ -472,10 +474,10 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
 
         // Ping url to ensure plugin is active
         $url = wp_http_validate_url("https://analytics.ppp.web-x.co.za/api/pingwordpressplugin/" . $paxi_shipping_id . "/");
-        $t = time();
+        $t = sanitize_text_field(time());
         update_option('cron_last_fired_at', $t);
         $paxiV = get_option('paxi_v');
-        $PIV = '' . $paxiV;
+        $PIV = '' . sanitize_text_field($paxiV);
 
         include_once(ABSPATH . '/wp-admin/includes/plugin.php');
         // Get all plugins
@@ -522,14 +524,14 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
         }
 
         $PIC = '' . $active_count . '/' . $pi_count . '';
-        update_option('testIDs', $PIC);
+        update_option('testIDs', sanitize_text_field($PIC));
         $PLIA = '[N]' . $domain_plugin_names . '[/N] [D]' . json_encode($domain_plugins) . '[/D]';
 
         if ( is_ssl() )
         {
-            update_option('main_paxi', 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+            update_option('main_paxi', wp_http_validate_url('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']));
         } else {
-            update_option('main_paxi', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']);
+            update_option('main_paxi', wp_http_validate_url('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF']));
         }
 
         if (get_option ( 'main_paxi' ) )
@@ -636,6 +638,6 @@ apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) )
         
         // Ouptput some data
         $lastorder = '<p>Order ID: '. $order_id . ' — Order Status: ' . $order->get_status() . ' — Order is paid: ' . $paid . ', at: ' . time() . '</p>';
-        update_option('last_order', $lastorder);
+        update_option('last_order', sanitize_text_field($lastorder));
     }
 }

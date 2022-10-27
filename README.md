@@ -49,23 +49,23 @@ After installation, activate the plugin. Thereafter you are good to go, and PAXI
 
 == Frequently Asked Questions ==
 Q1: What does PAXI Plugin do?
-A1: This plugin enables visiters to your store to select PAXI as a shipping method.
-This plugin will then apply a flat rate of R59.95 to the order as shipping cost and requet a PAXI Point where the order need to be sent to. This also assumes a delivery time of 7-9 working days which is indicated on the checkout page.
+A1: This plugin enables visitors to your store to select PAXI as a shipping method.
+This plugin will then apply a flat rate of R59.95 to the order as shipping cost and request a PAXI Point where the order need to be sent to. This also assumes a delivery time of 7-9 working days which is indicated on the checkout page.
 
 Q2: What happens if the user select PAXI but does not enter an PAXI Point?
 A2: This Plugin is smart enough to see if a blank field is provided, and will show an error that the PAXI Point was not supplied if this is the case.
 
 Q3: Can a client enter a wrong PAXI Point?
-A3: It is possible yes. We read the data entered and check if it consists of 5 characters. If it does, the plugin assume taht the number entered is correct.
+A3: It is possible yes. We read the data entered and check if it consists of 5 characters. If it does, the plugin assume that the number entered is correct.
 
 Q4: What happens if a user enters more or less than 5 characters?
 A4: When they try to submit the order, another error will be displayed indicating that the PAXI Point does not seem to be correct.
 
-Q5: How will the clinets know what the code of their nearest PAXi Point is?
+Q5: How will a client know what the code of their nearest PAXI Point is?
 A5: Both by clicking on the Text "Locate your nearest PAXI Point" and in the link provided in the error, they can open the PAXI Points lookup in a new window to determine the code of their nearest or most-convenient PAXI Point.
 
 Q6: Is PAXI Plugin affiliated with PAXI at all?
-A6: No, Web-X.co.za a third party realised that shortcomming of this feature when developing a WP WooCommerce shop for a client, and desided to build the solution as a plugin rather than adding the code to the site alone.
+A6: No, Web-X.co.za a third party realised that shortcoming of this feature when developing a WP WooCommerce shop for a client, and decided to build the solution as a plugin rather than adding the code to the site alone.
 
 
 == Screenshots ==
